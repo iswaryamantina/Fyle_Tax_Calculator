@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Calculator</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        .container {
+            max-width: 400px;
+            margin: 100px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 10px;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            margin-bottom: 30px;
+            color: #6c757d;
+        }
+        .form-group {
+            position: relative;
+            margin-bottom: 20px;
+        }
+        .error-icon {
+            display: none;
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #dc3545;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .error-icon:hover {
+            color: #c82333;
+        }
+        .form-control.is-invalid {
+            border-color: #dc3545;
+        }
+        .invalid-feedback {
+            display: none;
+            position: absolute;
+            top: calc(100% + 5px);
+            left: 0;
+            width: 100%;
+            font-size: 80%;
+            color: #dc3545;
+        }
+        .btn-submit {
+            width: 100%;
+            background-color: #800080;
+            border-color: #800080;
+            transition: background-color 0.3s ease-in-out;
+        }
+        .btn-submit:hover {
+            background-color: #6a006a;
+            border-color: #6a006a;
+        }
+        .modal-content {
+            border-radius: 10px;
+            max-width: 300px;
+            margin: 0 auto;
+            margin-top: 15%;
+            box-shadow: 0px 0px 20px rgba(0, 0, 0, 0.1);
+        }
+        .modal-body {
+            text-align: center;
+        }
+        .modal-footer {
+            justify-content: center;
+        }
+        .info {
+            display: inline-block;
+            margin-left: 5px;
+            font-size: 18px;
+            color: #6c757d;
+            cursor: pointer;
+            border: 2px solid #6c757d;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            text-align: center;
+            line-height: 21px;
+            font-weight: bold;
+        }
+        .info:hover {
+            text-decoration: none;
+            background-color: #6c757d;
+            color: #fff;
+        }
+        .info-tooltip {
+            position: absolute;
+            background-color: #6c757d;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+        }
+        .info:hover .info-tooltip {
+            display: block;
+        }
+        .form-control::placeholder {
+            color: #6c757d;
+        }
+        .mandatory {
+            color: red;
+        }
+        .number-only {
+            position: absolute;
+            right: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #6c757d;
+            cursor: pointer;
+            z-index: 10;
+        }
+        .number-only:hover {
+            color: #000;
+        }
+        .number-only-tooltip {
+            position: absolute;
+            background-color: #6c757d;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 1000;
+            display: none;
+            width: 200px;
+            text-align: center;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+        }
+        .number-only:hover .number-only-tooltip {
+            display: block;
+        }
+        .exclamation-mark {
+            position: absolute;
+            right: 30px;
+            top: 50%;
+            transform: translateY(10%);
+            color: #6c757d;
+            display: none;
+            font-size: 20px;
+            width: 25px;
+            height: 25px;
+            border-radius: 50%;
+            border: 2px solid #6c757d;
+            text-align: center;
+            line-height: 21px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        .exclamation-mark:hover + .exclamation-mark-tooltip {
+            display: block;
+        }
+        .exclamation-mark-tooltip {
+            display: none;
+            position: absolute;
+            top: calc(50% + 5px);
+            left: calc(100% + 5px);
+            background-color: #6c757d;
+            color: #fff;
+            padding: 5px;
+            border-radius: 5px;
+            z-index: 1000;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>Tax Calculator</h2>
+        <form id="taxForm">
+            <div class="form-group">
+                <label for="grossIncome">Enter Gross Annual Income<span class="info" title="Gross Annual Income">&#63;<span class="info-tooltip">Total income before any deductions.</span></span></label>
+                <input type="text" class="form-control" id="grossIncome" placeholder="Enter your gross annual income" required>
+                <span class="error-icon">&#9888;</span>
+                <span class="exclamation-mark">&#33;</span>
+                <span class="exclamation-mark-tooltip">Please enter numbers only</span>
+                <div class="invalid-feedback">Please enter a valid income.</div>
+            </div>
+            <div class="form-group">
+                <label for="extraIncome">Enter Extra Income<span class="info" title="Extra Income">&#63;<span class="info-tooltip">Any additional income apart from the annual income.</span></span></label>
+                <input type="text" class="form-control" id="extraIncome" placeholder="Enter any extra income" required>
+                <span class="error-icon">&#9888;</span>
+                <span class="exclamation-mark">&#33;</span>
+                <span class="exclamation-mark-tooltip">Please enter numbers only</span>
+                <div class="invalid-feedback">Please enter a valid income.</div>
+            </div>
+            <div class="form-group">
+                <label for="age">Enter Age Group<span class="info" title="Age">&#63;<span class="info-tooltip">Age group of the individual for tax calculation purposes.</span></span></label>
+                <select class="form-control" id="age" required>
+                    <option value="<40">&lt; 40</option>
+                    <option value=">=40 & <60">&ge; 40 &lt; 60</option>
+                    <option value=">=60">&ge; 60</option>
+                </select>
+                <span class="error-icon">&#9888;</span>
+                <span class="exclamation-mark">&#33;</span>
+                <span class="exclamation-mark-tooltip">Please select an age group</span>
+                <div class="invalid-feedback">Please select an age group.</div>
+            </div>
+            <div class="form-group">
+                <label for="deductions">Enter Total Applicable Deductions<span class="info" title="Deductions">&#63;<span class="info-tooltip">Amount that can be subtracted from the gross income to reduce taxable income.</span></span></label>
+                <input type="text" class="form-control" id="deductions" placeholder="Enter any deductions" required>
+                <span class="error-icon">&#9888;</span>
+                <span class="exclamation-mark">&#33;</span>
+                <span class="exclamation-mark-tooltip">Please enter numbers only</span>
+                <div class="invalid-feedback">Please enter a valid deduction amount.</div>
+            </div>
+            <button type="submit" class="btn btn-primary btn-submit">Calculate Tax</button>
+        </form>
+    </div>
+
+    <div class="modal fade" id="resultModal" tabindex="-1" role="dialog" aria-labelledby="resultModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="resultModalLabel">Tax Calculation Result</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p id="taxResult"></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('.error-icon').click(function(){
+                $(this).siblings('.invalid-feedback').toggle();
+            });
+
+            $('#taxForm').submit(function(e){
+                e.preventDefault();
+                $('.error-icon').hide();
+                $('.exclamation-mark').hide();
+                $('.exclamation-mark-tooltip').hide();
+                $('.invalid-feedback').hide();
+                $('.form-control').removeClass('is-invalid');
+                
+                var grossIncome = $('#grossIncome').val();
+                var extraIncome = $('#extraIncome').val();
+                var deductions = $('#deductions').val();
+                var age = $('#age').val();
+
+                if(isNaN(parseFloat(grossIncome)) || isNaN(parseFloat(extraIncome)) || isNaN(parseFloat(deductions))){
+                    $('.error-icon').show();
+                    $('.exclamation-mark').show();
+                    return;
+                }
+
+                var totalIncome = parseFloat(grossIncome) + parseFloat(extraIncome) - parseFloat(deductions);
+                var tax = 0;
+
+                if(totalIncome > 800000){
+                    if(age === '<40'){
+                        tax = 0.3 * (totalIncome - 800000);
+                    } else if(age === '>=40 & <60'){
+                        tax = 0.4 * (totalIncome - 800000);
+                    } else if(age === '>=60'){
+                        tax = 0.1 * (totalIncome - 800000);
+                    }
+                }
+
+                $('#taxResult').text('Tax to be paid: ' + tax.toFixed(2) + ' Lakhs');
+                $('#resultModal').modal('show');
+                $('#resultModal').on('shown.bs.modal', function () {
+                    $(this).find('.modal-dialog').css({
+                        'display': 'flex',
+                        'align-items': 'center',
+                        'justify-content': 'center'
+                    });
+                });
+            });
+
+            $('#grossIncome, #extraIncome, #deductions').on('input', function(){
+                var inputVal = $(this).val();
+                if(isNaN(parseFloat(inputVal)) || inputVal.trim() === ''){
+                    $(this).siblings('.exclamation-mark').show();
+                } else {
+                    $(this).siblings('.exclamation-mark').hide();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
