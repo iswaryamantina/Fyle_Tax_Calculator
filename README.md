@@ -1,4 +1,3 @@
-Tax Calculator Web Application
 This is a web application designed to calculate taxes based on user input. The application is implemented using HTML, CSS, and JavaScript, with the option to use Bootstrap and jQuery.
 
 Overview
